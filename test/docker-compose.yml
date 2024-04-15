@@ -1,0 +1,59 @@
+version: "3.8"
+
+networks:
+  inception:
+
+volumes:
+  wpphp:
+    name: wpphp
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/Users/menghongho/Downloads/42_core/inception/test/web/" 
+  datab:
+    name: datab
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/Users/menghongho/Downloads/42_core/inception/test/db/"
+
+
+services:
+  nginx:
+    build: requirements/nginx/.
+    container_name: nginx
+    ports:
+      - "443:443"
+    volumes:
+      - wpphp:/var/www/html
+    networks:
+      - inception
+    depends_on:
+      - wordpress
+    env_file:
+      - .env
+    # restart: always
+  mariadb:
+    build: requirements/mariadb/.
+    container_name: mariadb
+    volumes:
+      - ./datab:/var/lib/mysql
+    networks:
+      - inception
+    env_file:
+      - .env
+      # restart: always
+  wordpress:
+    build: requirements/wordpress/.
+    container_name: wordpress
+    volumes:
+      - ./web:/var/www/html
+    networks:
+      - inception
+    depends_on:
+      - mariadb
+    env_file:
+      - .env
+  #   # restart: always
