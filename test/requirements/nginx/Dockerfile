@@ -1,5 +1,7 @@
 FROM debian:bookworm
 
+WORKDIR /var/www/html
+
 RUN apt update && apt upgrade
 
 RUN apt install -y nginx vim curl openssl
@@ -15,6 +17,7 @@ RUN mkdir -p /var/run/nginx
 
 RUN chmod 755 /var/www/html
 RUN chown -R www-data:www-data /var/www/html
+
 
 EXPOSE 443
 

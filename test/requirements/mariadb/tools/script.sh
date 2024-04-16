@@ -17,17 +17,22 @@
 #
 #
 # mysqld
+#!/bin/sh
 
-mysql_install_db --basedir=/usr --datadir/var/lib/mysql --user=mysql > /dev/null
-	touch /usr/local/bin/init.sql
-	echo "USE mysql;
-		FLUSH PRIVILEGES;
-		CREATE DATABASE IF NOT EXISTS $MARIADB_DATABASE;
-		GRANT ALL PRIVILEGES ON $MARIADB_DATABASE.* TO '$MARIADB_USER'@'%' IDENTIFIED BY '$MARIADB_PASSWORD';
-		GRANT ALL PRIVILEGES ON $MARIADB_DATABASE.* TO 'root' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD';
-		ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD';
-		FLUSH PRIVILEGES;" > /usr/local/bin/init.sql
-mysqld --user=mysql --bootstrap < /usr/local/bin/init.sql
+if [ -d /var/lib/mysql/$MARIADB_DATABASE ]; then
+	echo "Database already exists"
+else
+	mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql > /dev/null
+		touch /usr/local/bin/init.sql
+		echo "USE mysql;
+			FLUSH PRIVILEGES;
+			CREATE DATABASE IF NOT EXISTS $MARIADB_DATABASE;
+			GRANT ALL PRIVILEGES ON $MARIADB_DATABASE.* TO '$MARIADB_USER'@'%' IDENTIFIED BY '$MARIADB_PASSWORD';
+			GRANT ALL PRIVILEGES ON $MARIADB_DATABASE.* TO 'root' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD';
+			ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_ROOT_PASSWORD';
+			FLUSH PRIVILEGES;" > /usr/local/bin/init.sql
+	mysqld --user=mysql --bootstrap < /usr/local/bin/init.sql
+fi
 # kill $(cat /var/run/mysqld/mysqld.pid)
 
 exec mysqld_safe
