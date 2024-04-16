@@ -1,4 +1,4 @@
-#!bin/sh
+#!/bin/sh
 
 # apt install mariadb-server -y;
 # apt install default-mysql-client -y;
@@ -17,9 +17,16 @@
 #
 #
 # mysqld
-#!/bin/sh
 
-if [ -d /var/lib/mysql/$MARIADB_DATABASE ]; then
+# echo "run chown"
+# cd /var/lib/mysql
+# chown mysql:root /var/lib/mysql
+# chmod 777 /var/lib/mysql/aria_log_control
+# chmod 777 /var/lib/mysql/aria_log.00000001
+# echo "----------------------------------------------------------"
+# ls -la | grep aria_log_control
+# echo "----------------------------------------------------------"
+if [ -d /var/lib/mysql/$DB_NAME ]; then
 	echo "Database already exists"
 else
 	mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql > /dev/null
@@ -35,4 +42,6 @@ else
 fi
 # kill $(cat /var/run/mysqld/mysqld.pid)
 
-exec mysqld_safe
+exec "$@"
+
+# exec mysqld_safe
