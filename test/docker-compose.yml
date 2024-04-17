@@ -47,6 +47,11 @@ services:
     expose:
       - "3306"
     restart: on-failure
+    healthcheck:
+      test: ["CMD", "mysqladmin", "-u", "root", "-p$MARIADB_ROOT_PASSWORD", "ping"] 
+      interval: 10s
+      timeout: 5s
+      retries: 5
   wordpress:
     build: requirements/wordpress/.
     container_name: wordpress

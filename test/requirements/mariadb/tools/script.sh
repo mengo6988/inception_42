@@ -26,6 +26,7 @@
 # echo "----------------------------------------------------------"
 # ls -la | grep aria_log_control
 # echo "----------------------------------------------------------"
+
 if [ -d /var/lib/mysql/$MARIADB_DATABASE ]; then
 	echo "Database already exists"
 else
@@ -40,8 +41,9 @@ else
 			FLUSH PRIVILEGES;" > /usr/local/bin/init.sql
 	mysqld --user=mysql --bootstrap < /usr/local/bin/init.sql
 fi
+exec "$@"
+
 # kill $(cat /var/run/mysqld/mysqld.pid)
 
-exec "$@"
 
 # exec mysqld_safe

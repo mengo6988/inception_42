@@ -1,14 +1,44 @@
 #!/bin/sh
 
+# Define how long to wait for MariaDB (seconds)
+MAX_WAIT_TIME=30
+
+# Function to test connection to MariaDB
+test_db_connection() {
+  echo "Trying to connect to MariaDB..."
+  mysql -h $WP_DB_HOST -u $WP_DB_USER -p$WP_DB_PASSWORD $WP_DB &> /dev/null
+  if [ $? -eq 0 ]; then
+    echo "Connection to MariaDB successful!"
+    return 0
+  else
+    echo "Connection failed. Retrying..."
+    return 1
+  fi
+}
+
+# Wait for MariaDB to be ready (with timeout)
+counter=0
+while ! test_db_connection; do
+  sleep 5
+  counter=$(counter+1)
+  if [ $counter -eq $MAX_WAIT_TIME ]; then
+    echo "Timeout waiting for MariaDB. Exiting..."
+    exit 1
+  fi
+done
+
+# Start WordPress now that MariaDB is ready
+echo "MariaDB is ready. Starting WordPress..."
+
 # wp cli update
-if [ -f ./wp-config.php]
+if [ -f ./wp-config.php ];
 then
 	echo "wordpress already downloaded..."
 else
-	echo "core download-----------------------------------------------"
+	# echo "core download-----------------------------------------------"
 	# wp core download --allow-root
 
-	echo "creating config------------------------------------------------"
+	# echo "creating config------------------------------------------------"
 	wp config create	--allow-root --dbname=$WP_DB --dbuser=$WP_DB_USER --dbpass=$WP_DB_PASSWORD --dbhost=$WP_DB_HOST --path='/var/www/html'
 
 	wp core install --url=$DOMAIN_NAME --title=$WP_TITLE --admin_user=$WP_ADMIN_USR --admin_password=$WP_ADMIN_PWD --admin_email=$WP_ADMIN_EMAIL --skip-email --allow-root
