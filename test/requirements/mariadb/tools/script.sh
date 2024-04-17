@@ -26,7 +26,7 @@
 # echo "----------------------------------------------------------"
 # ls -la | grep aria_log_control
 # echo "----------------------------------------------------------"
-if [ -d /var/lib/mysql/$DB_NAME ]; then
+if [ -d /var/lib/mysql/$MARIADB_DATABASE ]; then
 	echo "Database already exists"
 else
 	mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql > /dev/null
