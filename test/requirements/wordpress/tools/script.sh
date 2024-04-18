@@ -18,12 +18,28 @@ test_db_connection() {
 
 # Wait for MariaDB to be ready (with timeout)
 counter=0
-while ! test_db_connection; do
-  sleep 5
-  counter=$(counter+1)
-  if [ $counter -eq $MAX_WAIT_TIME ]; then
-    echo "Timeout waiting for MariaDB. Exiting..."
-    exit 1
+# connection_pass=0
+# while ! test_db_connection && pass < 3; do
+#   sleep 5
+#   counter=$(counter+1)
+#   if [ $counter -eq $MAX_WAIT_TIME ]; then
+#     echo "Timeout waiting for MariaDB. Exiting..."
+#     exit 1
+#   fi
+# done
+success_count=0
+while [ $success_count -lt 3 ]; do
+  if test_db_connection; then
+    success_count=$((success_count + 1))
+    echo "Database connection successful attempt $success_count"
+	sleep 5
+  else
+    echo "Database connection failed!"
+	counter=$(counter+1)
+	if [ $counter -eq $MAX_WAIT_TIME ]; then
+		echo "Timeout waiting for mariadb..."
+		exit 1
+	fi
   fi
 done
 

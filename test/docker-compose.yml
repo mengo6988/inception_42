@@ -18,6 +18,13 @@ volumes:
       type: none
       o: bind
       device: "/home/mengo/data/mariadb/"
+  # jp:
+  #   name: jp
+  #   driver: local
+  #   driver_opts:
+  #     type: none
+  #     o: bind
+  #     device: "/home/mengo/data/jp/"
 
 
 services:
@@ -54,21 +61,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  wordpress:
-    build: requirements/wordpress/.
-    container_name: wordpress
-    image: wordpress
-    volumes:
-      - wpphp:/var/www/html
-    networks:
-      - inception
-    depends_on:
-      - mariadb
-    env_file:
-      - .env
-    expose:
-      - "9000"
-    restart: on-failure
   redis:
     build: requirements/bonus/redis/.
     container_name: redis
@@ -85,7 +77,7 @@ services:
     container_name: ftp
     image: ftp
     volumes:
-      - wpphp:/home/ftp
+      - wpphp:/var/www/html
     networks:
       - inception
     depends_on:
@@ -94,4 +86,32 @@ services:
       - .env
     ports:
       - "21:21"
+    restart: on-failure
+  # jupyter:
+  #   build: requirements/bonus/jupyter/.
+  #   container_name: jupyter
+  #   image: jupyter
+  #   volumes:
+  #     - jp:/home/jupyter
+  #   networks:
+  #     - inception
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - "8888:8888"
+  #   restart: on-failure
+  wordpress:
+    build: requirements/wordpress/.
+    container_name: wordpress
+    image: wordpress
+    volumes:
+      - wpphp:/var/www/html
+    networks:
+      - inception
+    depends_on:
+      - mariadb
+    env_file:
+      - .env
+    expose:
+      - "9000"
     restart: on-failure
