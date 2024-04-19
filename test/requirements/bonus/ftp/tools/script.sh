@@ -30,6 +30,8 @@ then
 	#to allow ftp to write files, have to change the permissions
 	chown -R ftp:ftp /var/www/html/$FTP_USER
 	chown -R $FTP_USER:$FTP_USER /var/www/html/$FTP_USER
+	sed -i "s|local_root=/var/www/html|local_root=/var/www/html/$FTP_USER|g"
+	# sed -i "s/local_root=\/var\/www\/html/local_root=\/var\/www\/html\/$FTP_USER/g"
 	echo $FTP_USER > /etc/vsftpd.userlist
 fi
 
