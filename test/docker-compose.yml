@@ -86,6 +86,7 @@ services:
       - .env
     ports:
       - "21:21"
+      - "21100-21110:21100-21110"
     restart: on-failure
   # jupyter:
   #   build: requirements/bonus/jupyter/.

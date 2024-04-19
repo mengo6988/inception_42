@@ -23,14 +23,13 @@ vsftpd /etc/vsftpd/vsftpd.conf
 
 if [ ! -f "/etc/vsftpd.userlist" ]
 then
+	mkdir -p /var/run/vsftpd/empty
 	mkdir -p /var/www/html/$FTP_USER
 	useradd -m $FTP_USER
 	echo "$FTP_USER:$FTP_PASSWORD" | /usr/sbin/chpasswd &> dev/null
 	#to allow ftp to write files, have to change the permissions
 	chown -R ftp:ftp /var/www/html/$FTP_USER
-	#AFTER THAT SET BACK PERMISSIONS FOR LOCAL USER
-	chown -R $FTP_USER:$FTP_USER //var/www/html/$FTP_USER
-	#PAM AUTHENTICATION	
+	chown -R $FTP_USER:$FTP_USER /var/www/html/$FTP_USER
 	echo $FTP_USER > /etc/vsftpd.userlist
 fi
 
