@@ -18,13 +18,13 @@ volumes:
       type: none
       o: bind
       device: "/home/mengo/data/mariadb/"
-  # jp:
-  #   name: jp
-  #   driver: local
-  #   driver_opts:
-  #     type: none
-  #     o: bind
-  #     device: "/home/mengo/data/jp/"
+  jp:
+    name: jp
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/home/mengo/data/jp/"
 
 
 services:
@@ -88,19 +88,19 @@ services:
       - "21:21"
       - "21100-21110:21100-21110"
     restart: on-failure
-  # jupyter:
-  #   build: requirements/bonus/jupyter/.
-  #   container_name: jupyter
-  #   image: jupyter
-  #   volumes:
-  #     - jp:/home/jupyter
-  #   networks:
-  #     - inception
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - "8888:8888"
-  #   restart: on-failure
+  jupyter:
+    build: requirements/bonus/jupyter/.
+    container_name: jupyter
+    image: jupyter
+    volumes:
+      - jp:/home/jupyter
+    networks:
+      - inception
+    env_file:
+      - .env
+    ports:
+      - "8888:8888"
+    restart: on-failure
   wordpress:
     build: requirements/wordpress/.
     container_name: wordpress
@@ -115,4 +115,17 @@ services:
       - .env
     expose:
       - "9000"
+    restart: on-failure
+  adminer:
+    build: requirements/bonus/adminer/.
+    container_name: adminer
+    image: adminer
+    networks:
+      - inception
+    depends_on:
+      - mariadb
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
     restart: on-failure

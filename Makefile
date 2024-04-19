@@ -1,8 +1,8 @@
 all:
 	sudo mkdir -p /home/mengo/data/mariadb
 	sudo mkdir -p /home/mengo/data/wordpress
-	# @docker compose -f ./test/docker-compose.yml up --build
-	@docker compose -f ./test/docker-compose.yml up -d --build
+	@docker compose -f ./test/docker-compose.yml up --build
+	# @docker compose -f ./test/docker-compose.yml up -d --build
 
 start:
 	@docker compose -f ./test/docker-compose.yml start
