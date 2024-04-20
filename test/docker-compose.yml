@@ -8,21 +8,18 @@ volumes:
     name: wpphp
     driver: local
     driver_opts:
-      type: none
       o: bind
       device: "/home/mengo/data/wordpress/" 
   mdb:
     name: mdb
     driver: local
     driver_opts:
-      type: none
       o: bind
       device: "/home/mengo/data/mariadb/"
   jp:
     name: jp
     driver: local
     driver_opts:
-      type: none
       o: bind
       device: "/home/mengo/data/jp/"
 
